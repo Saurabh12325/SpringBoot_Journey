@@ -18,5 +18,4 @@ public class EmployeeEntity {
     private String age;
     private LocalDate dateOfJoining;
     private boolean isActive;
-
 }
