@@ -1,6 +1,6 @@
 package com.example.SpringBoot.LearningSpringBoot.Controller;
 
-import com.example.SpringBoot.LearningSpringBoot.Entities.EmployeeEntity;
+
 import com.example.SpringBoot.LearningSpringBoot.Services.EmployeeService;
 import com.example.SpringBoot.LearningSpringBoot.dto.EmployeeDTO;
 import com.example.SpringBoot.LearningSpringBoot.repositories.EmployeeRepositiory;
@@ -30,5 +30,9 @@ public class EmployeeController {
     @GetMapping("/{EmployeeId}")
     public EmployeeDTO getEmployeeById(@PathVariable (name = "EmployeeId") Long id){
         return employeeService.findById(id);
+    }
+    @PutMapping("/{employeeId}")
+    public EmployeeDTO updateEmployeeById(@PathVariable  Long employeeId, @RequestBody EmployeeDTO employeeDTO) {
+        return employeeService.updateEmployee(employeeId,employeeDTO);
     }
 }

@@ -22,6 +22,7 @@ public class EmployeeService {
 
 
 
+
     public List<EmployeeDTO> findAll() {
         List<EmployeeEntity> employeeEntities = employeeRepositiory.findAll();
 
@@ -41,4 +42,12 @@ public class EmployeeService {
         return modelMapper.map(employee, EmployeeDTO.class);
 
     }
+    public EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
+        EmployeeEntity employeeEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
+        employeeEntity.setId(employeeId);
+        EmployeeEntity saveEmployeeEntity = employeeRepositiory.save(employeeEntity);
+        return modelMapper.map(saveEmployeeEntity, EmployeeDTO.class);
+    }
+
+
 }
