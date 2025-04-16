@@ -4,9 +4,11 @@ package com.example.SpringBoot.LearningSpringBoot.Controller;
 import com.example.SpringBoot.LearningSpringBoot.Services.EmployeeService;
 import com.example.SpringBoot.LearningSpringBoot.dto.EmployeeDTO;
 import com.example.SpringBoot.LearningSpringBoot.repositories.EmployeeRepositiory;
+import jakarta.validation.Valid;
 import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 @PostMapping("/save")
-    public ResponseEntity<EmployeeDTO>SaveEmployee(@RequestBody  EmployeeDTO employeeDTO) {
+    public ResponseEntity<EmployeeDTO>SaveEmployee(@RequestBody @Valid EmployeeDTO employeeDTO) {
         EmployeeDTO savedEmployee = employeeService.Save(employeeDTO);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }

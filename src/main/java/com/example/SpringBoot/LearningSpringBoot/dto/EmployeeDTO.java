@@ -15,6 +15,7 @@ public class EmployeeDTO {
     private  String name ;
     private String email;
     private String age;
+    private String role;
     private LocalDate dateOfJoining;
     @JsonProperty("isActive")
     private boolean isActive;
