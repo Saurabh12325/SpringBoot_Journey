@@ -1,5 +1,6 @@
 package com.example.SpringBoot.LearningSpringBoot.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class EmployeeDTO {
     private String email;
     private String age;
     private LocalDate dateOfJoining;
+    @JsonProperty("isActive")
     private boolean isActive;
 
 }

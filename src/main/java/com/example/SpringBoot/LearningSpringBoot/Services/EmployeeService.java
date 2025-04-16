@@ -4,9 +4,13 @@ import com.example.SpringBoot.LearningSpringBoot.Entities.EmployeeEntity;
 import com.example.SpringBoot.LearningSpringBoot.dto.EmployeeDTO;
 import com.example.SpringBoot.LearningSpringBoot.repositories.EmployeeRepositiory;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,10 +35,7 @@ public class EmployeeService {
                .collect(Collectors.toList());
     }
 
-    public EmployeeDTO findById(Long id) {
-        EmployeeEntity employee = employeeRepositiory.findById(id).orElse(null);
-        return modelMapper.map(employee, EmployeeDTO.class);
-    }
+
 
     public EmployeeDTO Save(EmployeeDTO employeeDTO) {
         EmployeeEntity tosaveEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
@@ -50,4 +51,31 @@ public class EmployeeService {
     }
 
 
+    public boolean deleteEmployeeById(Long employeeId) {
+        boolean exists =employeeRepositiory.existsById(employeeId);
+        if(!exists){
+            return false;
+        }
+        employeeRepositiory.deleteById(employeeId);
+        return true;
+    }
+
+    public EmployeeDTO updateEmployeeDetailByID(Long employeeId, Map<String, Object> updates) {
+        boolean exists= employeeRepositiory.existsById(employeeId);
+        if(!exists){
+            return null;
+        }
+        EmployeeEntity employeeEntity = employeeRepositiory.findById(employeeId).get();
+        updates.forEach((field,value) ->{
+        Field fieldToBeUpdated = ReflectionUtils.findRequiredField(EmployeeEntity.class,field);
+        fieldToBeUpdated.setAccessible(true);
+        ReflectionUtils.setField(fieldToBeUpdated,employeeEntity,value);
+        });
+
+return  modelMapper.map(employeeRepositiory.save(employeeEntity), EmployeeDTO.class);
+    }
+
+    public Optional<EmployeeDTO> getEmployeeById(Long id) {
+        return employeeRepositiory.findById(id).map(employeeEntity -> modelMapper.map(employeeEntity, EmployeeDTO.class));
+    }
 }

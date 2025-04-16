@@ -1,5 +1,6 @@
 package com.example.SpringBoot.LearningSpringBoot.Entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.boot.registry.selector.spi.StrategyCreator;
@@ -17,5 +18,6 @@ public class EmployeeEntity {
     private String email;
     private String age;
     private LocalDate dateOfJoining;
+    @JsonProperty("isActive")
     private boolean isActive;
 }
