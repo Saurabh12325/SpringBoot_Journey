@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("api")
@@ -41,7 +38,8 @@ public class EmployeeController {
         Optional<EmployeeDTO> employeeDTO = employeeService.getEmployeeById(id);
        return employeeDTO
                .map(employeeDTO1 -> ResponseEntity.ok().body(employeeDTO1))
-               .orElse(ResponseEntity.notFound().build());
+               .orElseThrow
+                       (() -> new NoSuchElementException("Element not found"));
     }
     @PutMapping("/{employeeId}")
     public ResponseEntity<EmployeeDTO>  updateEmployeeById(@PathVariable  Long employeeId, @RequestBody EmployeeDTO employeeDTO) {
