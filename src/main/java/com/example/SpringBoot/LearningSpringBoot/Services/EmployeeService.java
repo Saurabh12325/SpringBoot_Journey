@@ -2,6 +2,7 @@ package com.example.SpringBoot.LearningSpringBoot.Services;
 
 import com.example.SpringBoot.LearningSpringBoot.Entities.EmployeeEntity;
 import com.example.SpringBoot.LearningSpringBoot.dto.EmployeeDTO;
+import com.example.SpringBoot.LearningSpringBoot.exceptions.ResourceNotFoundExceptions;
 import com.example.SpringBoot.LearningSpringBoot.repositories.EmployeeRepositiory;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.ReflectionUtils;
@@ -44,27 +45,29 @@ public class EmployeeService {
 
     }
     public EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
+        isExistsByEmployeeId(employeeId);
         EmployeeEntity employeeEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
         employeeEntity.setId(employeeId);
         EmployeeEntity saveEmployeeEntity = employeeRepositiory.save(employeeEntity);
         return modelMapper.map(saveEmployeeEntity, EmployeeDTO.class);
     }
 
+    private void isExistsByEmployeeId(Long employeeId) {
+        boolean exists = employeeRepositiory.existsById(employeeId);
+        if (!exists) {
+            throw new ResourceNotFoundExceptions("Employee Not Found with id " + employeeId);
+        }
+    }
+
 
     public boolean deleteEmployeeById(Long employeeId) {
-        boolean exists =employeeRepositiory.existsById(employeeId);
-        if(!exists){
-            return false;
-        }
+        isExistsByEmployeeId(employeeId);
         employeeRepositiory.deleteById(employeeId);
         return true;
     }
 
     public EmployeeDTO updateEmployeeDetailByID(Long employeeId, Map<String, Object> updates) {
-        boolean exists= employeeRepositiory.existsById(employeeId);
-        if(!exists){
-            return null;
-        }
+        isExistsByEmployeeId(employeeId);
         EmployeeEntity employeeEntity = employeeRepositiory.findById(employeeId).get();
         updates.forEach((field,value) ->{
         Field fieldToBeUpdated = ReflectionUtils.findRequiredField(EmployeeEntity.class,field);

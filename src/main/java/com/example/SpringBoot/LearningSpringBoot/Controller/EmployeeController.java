@@ -3,6 +3,7 @@ package com.example.SpringBoot.LearningSpringBoot.Controller;
 
 import com.example.SpringBoot.LearningSpringBoot.Services.EmployeeService;
 import com.example.SpringBoot.LearningSpringBoot.dto.EmployeeDTO;
+import com.example.SpringBoot.LearningSpringBoot.exceptions.ResourceNotFoundExceptions;
 import com.example.SpringBoot.LearningSpringBoot.repositories.EmployeeRepositiory;
 import jakarta.validation.Valid;
 import lombok.Value;
@@ -39,7 +40,7 @@ public class EmployeeController {
        return employeeDTO
                .map(employeeDTO1 -> ResponseEntity.ok().body(employeeDTO1))
                .orElseThrow
-                       (() -> new NoSuchElementException("Element not found"));
+                       (() -> new ResourceNotFoundExceptions("Element not found with id:" + id));
     }
     @PutMapping("/{employeeId}")
     public ResponseEntity<EmployeeDTO>  updateEmployeeById(@PathVariable  Long employeeId, @RequestBody EmployeeDTO employeeDTO) {
