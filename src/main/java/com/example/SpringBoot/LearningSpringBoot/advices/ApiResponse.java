@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 public class ApiResponse<T> {
 
     private LocalDateTime timestamp;
-
-
     private T data;
     private ApiError error;
 
@@ -17,9 +15,6 @@ public class ApiResponse<T> {
         this();
         this.error = error;
     }
-
-
-
 
     public ApiResponse(T data) {
         this();
