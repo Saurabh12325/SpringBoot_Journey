@@ -20,11 +20,11 @@ jobs:
       - name: Build Project
         run: mvn clean install -DskipTests
 
-      - name: Login to Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to Docker Hub (secure)
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t Saurabh12325/SpringBoot_Journey .
+        run: docker build -t Saurabh12325/SpringBoot_Journey:latest .
 
       - name: Publish image to Docker Hub
         run: docker push Saurabh12325/SpringBoot_Journey:latest
@@ -36,7 +36,7 @@ jobs:
       - name: Pull Image from Docker Hub
         run: docker pull Saurabh12325/SpringBoot_Journey:latest
 
-      - name: Delete old container
+      - name: Delete old container (if exists)
         run: docker rm -f SpringBoot_Journey-container || true
 
       - name: Run Docker container
