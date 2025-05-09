@@ -1,38 +1,43 @@
 name: CICD
+
 on:
   push:
-    branches : [main]
+    branches: [main]
 
-    jobs:
-      build:
-        runs-on: [ubuntu-latest]
-        steps:
-        -  name: checkout source
-           uses : actions/checkout@v3
-        -  name: Setup Java
-           uses:  actions/setup-java@v3
-           with:
-             distribution: 'temurin'
-             java-version : '17'
-        - name: Build Project
-          run: mvn clean install -DskipTests
-        - name: Login to docker hub
-          run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-        - name: Build docker image
-          run: docker build -t Saurabh12325/SpringBoot_Journey
-        - name: Publish image to docker hub
-          run : docker push Saurabh12325/SpringBoot_Journey:latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
 
-          deploy:
-            needs: build
-            runs-on: [self-hosted, Linux, X64]
-            steps:
-              - name: Pull Image from docker hub
-                run: docker pull Saurabh12325/SpringBoot_Journey:latest
-              - name: Delete old container
-                run: docker rm -f SpringBoot_Journey-container
-              - name: Run docker container
-                run : docker run -d -p 8080:8080 --name SpringBoot_Journey-container Saurabh12325/SpringBoot_Journey
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
+      - name: Build Project
+        run: mvn clean install -DskipTests
 
-            
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: docker build -t Saurabh12325/SpringBoot_Journey .
+
+      - name: Publish image to Docker Hub
+        run: docker push Saurabh12325/SpringBoot_Journey:latest
+
+  deploy:
+    needs: build
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - name: Pull Image from Docker Hub
+        run: docker pull Saurabh12325/SpringBoot_Journey:latest
+
+      - name: Delete old container
+        run: docker rm -f SpringBoot_Journey-container || true
+
+      - name: Run Docker container
+        run: docker run -d -p 8080:8080 --name SpringBoot_Journey-container Saurabh12325/SpringBoot_Journey:latest
