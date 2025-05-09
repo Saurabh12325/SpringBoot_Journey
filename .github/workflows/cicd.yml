@@ -25,7 +25,7 @@ on:
 
           deploy:
             needs: build
-            runs-on: [aws-ec2]
+            runs-on: [self-hosted, Linux, X64]
             steps:
               - name: Pull Image from docker hub
                 run: docker pull Saurabh12325/SpringBoot_Journey:latest
